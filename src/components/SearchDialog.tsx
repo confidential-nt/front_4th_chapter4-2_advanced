@@ -19,7 +19,6 @@ import {
 import { useScheduleContext } from '../context/ScheduleContext.tsx';
 import { Lecture, SearchOption } from '../types/types.ts';
 import { parseSchedule } from '../utils/utils.ts';
-import axios, { AxiosResponse } from 'axios';
 import { Credits } from './Credits.tsx';
 import { SearchQuery } from './SearchQuery.tsx';
 import { Grades } from './Grades.tsx';
@@ -27,6 +26,7 @@ import { Days } from './Days.tsx';
 import { Times } from './Times.tsx';
 import { Majors } from './Majors.tsx';
 import { VisibleLecture } from './VisibleLecture.tsx';
+import { fetchAllLectures } from '../api/api.ts';
 
 interface Props {
   searchInfo: {
@@ -38,40 +38,6 @@ interface Props {
 }
 
 const PAGE_SIZE = 100;
-
-const fetchMajors = () => axios.get<Lecture[]>('/schedules-majors.json');
-const fetchLiberalArts = () =>
-  axios.get<Lecture[]>('/schedules-liberal-arts.json');
-
-// TODO: 이 코드를 개선해서 API 호출을 최소화 해보세요 + Promise.all이 현재 잘못 사용되고 있습니다. 같이 개선해주세요.
-const createCachedFetcher = () => {
-  const cache = new WeakMap();
-
-  return async (fetcher: () => Promise<AxiosResponse<Lecture[], unknown>>) => {
-    if (cache.has(fetcher)) {
-      return cache.get(fetcher);
-    }
-
-    const result = await fetcher();
-    cache.set(fetcher, result);
-    return result;
-  };
-};
-
-const fetchWithCache = createCachedFetcher();
-
-const fetchAllLectures = async () =>
-  await Promise.all([
-    (console.log('API Call 1', performance.now()), fetchWithCache(fetchMajors)),
-    (console.log('API Call 2', performance.now()),
-    fetchWithCache(fetchLiberalArts)),
-    (console.log('API Call 3', performance.now()), fetchWithCache(fetchMajors)),
-    (console.log('API Call 4', performance.now()),
-    fetchWithCache(fetchLiberalArts)),
-    (console.log('API Call 5', performance.now()), fetchWithCache(fetchMajors)),
-    (console.log('API Call 6', performance.now()),
-    fetchWithCache(fetchLiberalArts)),
-  ]);
 
 // TODO: 이 컴포넌트에서 불필요한 연산이 발생하지 않도록 다양한 방식으로 시도해주세요.
 const SearchDialog = memo(({ searchInfo, onClose }: Props) => {
