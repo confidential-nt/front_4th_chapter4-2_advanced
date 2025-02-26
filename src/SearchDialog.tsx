@@ -1,7 +1,6 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
-  Button,
   HStack,
   Modal,
   ModalBody,
@@ -11,7 +10,6 @@ import {
   ModalOverlay,
   Table,
   Tbody,
-  Td,
   Text,
   Th,
   Thead,
@@ -28,6 +26,7 @@ import { Grades } from './Grades.tsx';
 import { Days } from './Days.tsx';
 import { Times } from './Times.tsx';
 import { Majors } from './Majors.tsx';
+import { VisibleLecture } from './VisibleLecture.tsx';
 
 interface Props {
   searchInfo: {
@@ -92,41 +91,25 @@ const SearchDialog = memo(({ searchInfo, onClose }: Props) => {
 
   const filteredLectures = useMemo(() => {
     const { query = '', credits, grades, days, times, majors } = searchOptions;
-    return lectures
-      .filter(
-        (lecture) =>
-          lecture.title.toLowerCase().includes(query.toLowerCase()) ||
-          lecture.id.toLowerCase().includes(query.toLowerCase())
-      )
-      .filter(
-        (lecture) => grades.length === 0 || grades.includes(lecture.grade)
-      )
-      .filter(
-        (lecture) => majors.length === 0 || majors.includes(lecture.major)
-      )
-      .filter(
-        (lecture) => !credits || lecture.credits.startsWith(String(credits))
-      )
-      .filter((lecture) => {
-        if (days.length === 0) {
-          return true;
-        }
-        const schedules = lecture.schedule
-          ? parseSchedule(lecture.schedule)
-          : [];
-        return schedules.some((s) => days.includes(s.day));
-      })
-      .filter((lecture) => {
-        if (times.length === 0) {
-          return true;
-        }
-        const schedules = lecture.schedule
-          ? parseSchedule(lecture.schedule)
-          : [];
-        return schedules.some((s) =>
-          s.range.some((time) => times.includes(time))
-        );
-      });
+
+    return lectures.filter(
+      (lecture) =>
+        (lecture.title.toLowerCase().includes(query.toLowerCase()) ||
+          lecture.id.toLowerCase().includes(query.toLowerCase())) &&
+        (grades.length === 0 || grades.includes(lecture.grade)) &&
+        (majors.length === 0 || majors.includes(lecture.major)) &&
+        (!credits || lecture.credits.startsWith(String(credits))) &&
+        (days.length === 0 ||
+          (lecture.schedule &&
+            parseSchedule(lecture.schedule).some((s) =>
+              days.includes(s.day)
+            ))) &&
+        (times.length === 0 ||
+          (lecture.schedule &&
+            parseSchedule(lecture.schedule).some((s) =>
+              s.range.some((time) => times.includes(time))
+            )))
+    );
   }, [lectures, searchOptions]);
 
   const lastPage = Math.ceil(filteredLectures.length / PAGE_SIZE);
@@ -271,29 +254,11 @@ const SearchDialog = memo(({ searchInfo, onClose }: Props) => {
                 <Table size="sm" variant="striped">
                   <Tbody>
                     {visibleLectures.map((lecture, index) => (
-                      <Tr key={`${lecture.id}-${index}`}>
-                        <Td width="100px">{lecture.id}</Td>
-                        <Td width="50px">{lecture.grade}</Td>
-                        <Td width="200px">{lecture.title}</Td>
-                        <Td width="50px">{lecture.credits}</Td>
-                        <Td
-                          width="150px"
-                          dangerouslySetInnerHTML={{ __html: lecture.major }}
-                        />
-                        <Td
-                          width="150px"
-                          dangerouslySetInnerHTML={{ __html: lecture.schedule }}
-                        />
-                        <Td width="80px">
-                          <Button
-                            size="sm"
-                            colorScheme="green"
-                            onClick={() => addSchedule(lecture)}
-                          >
-                            추가
-                          </Button>
-                        </Td>
-                      </Tr>
+                      <VisibleLecture
+                        lecture={lecture}
+                        onAddSchedule={addSchedule}
+                        key={`${lecture.id}-${index}`}
+                      />
                     ))}
                   </Tbody>
                 </Table>

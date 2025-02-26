@@ -23,7 +23,7 @@ export const Grades = memo(({ value, changeSearchOption }: Props) => {
       >
         <HStack spacing={4}>
           {[1, 2, 3, 4].map((grade) => (
-            <Grade grade={grade} />
+            <Grade grade={grade} key={grade} />
           ))}
         </HStack>
       </CheckboxGroup>
@@ -32,7 +32,5 @@ export const Grades = memo(({ value, changeSearchOption }: Props) => {
 });
 
 const Grade = memo(({ grade }: { grade: number }) => (
-  <Checkbox key={grade} value={grade}>
-    {grade}학년
-  </Checkbox>
+  <Checkbox value={grade}>{grade}학년</Checkbox>
 ));
