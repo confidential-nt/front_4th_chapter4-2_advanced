@@ -6,9 +6,8 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 import { memo } from 'react';
-
-import { ChangeSearchOption } from './types';
-import { DAY_LABELS } from './constants';
+import { DAY_LABELS } from '../constants/constants';
+import { ChangeSearchOption } from '../types/types';
 
 type Props = {
   value: string[];

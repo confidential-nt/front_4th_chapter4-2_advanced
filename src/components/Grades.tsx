@@ -6,7 +6,7 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 import { memo } from 'react';
-import { ChangeSearchOption } from './types';
+import { ChangeSearchOption } from './types/types';
 
 type Props = {
   value: number[];

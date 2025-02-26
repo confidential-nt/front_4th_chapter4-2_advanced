@@ -1,5 +1,5 @@
 import { FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { ChangeSearchOption } from './types';
+import { ChangeSearchOption } from '../types/types';
 
 type Props = {
   value?: string;

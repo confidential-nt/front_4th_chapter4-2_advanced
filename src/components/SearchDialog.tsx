@@ -16,9 +16,9 @@ import {
   Tr,
   VStack,
 } from '@chakra-ui/react';
-import { useScheduleContext } from './ScheduleContext.tsx';
-import { Lecture, SearchOption } from './types.ts';
-import { parseSchedule } from './utils.ts';
+import { useScheduleContext } from '../context/ScheduleContext.tsx';
+import { Lecture, SearchOption } from '../types/types.ts';
+import { parseSchedule } from '../utils/utils.ts';
 import axios, { AxiosResponse } from 'axios';
 import { Credits } from './Credits.tsx';
 import { SearchQuery } from './SearchQuery.tsx';

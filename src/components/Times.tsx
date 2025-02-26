@@ -11,7 +11,7 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 import { memo } from 'react';
-import { ChangeSearchOption } from './types';
+import { ChangeSearchOption } from '../types/types';
 
 const TIME_SLOTS = [
   { id: 1, label: '09:00~09:30' },

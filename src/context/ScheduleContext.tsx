@@ -5,8 +5,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Schedule } from './types.ts';
-import dummyScheduleMap from './dummyScheduleMap.ts';
+import { Schedule } from '../types/types.ts';
+import dummyScheduleMap from '../data/dummyScheduleMap.ts';
 
 interface ScheduleContextType {
   schedulesMap: Record<string, Schedule[]>;
