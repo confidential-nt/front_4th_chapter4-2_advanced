@@ -21,7 +21,6 @@ export const Days = memo(({ value, changeSearchOption }: Props) => {
       <CheckboxGroup
         value={value}
         onChange={(value) => {
-          console.log(value);
           changeSearchOption('days', value as string[]);
         }}
       >
